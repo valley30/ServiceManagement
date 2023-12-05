@@ -37,33 +37,7 @@ public class WebSecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                .formLogin(form -> form
-                                .loginProcessingUrl("/api/auth/login")
-                                .successHandler((request, response, authentication) -> {
-                                    // Ustawienie statusu odpowiedzi
-                                    response.setStatus(HttpServletResponse.SC_OK);
-                                    response.setCharacterEncoding("UTF-8");
-                                    response.setContentType("application/json");
-                                    // Możesz tutaj dodac generowanie tokena JWT lub zw informacje o użytkowniku
-                                    // Na przykład:
-                                    String json = "{\"message\": \"Logowanie pomyslne\", \"username\": \"" + authentication.getName() + "\"}";
-                                    response.getOutputStream().print(json);
-                                })
-                                .failureHandler((request, response, exception) -> {
-                                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                    response.setCharacterEncoding("UTF-8");
-                                    response.setContentType("application/json");
-                                    String json = "{\"error\": \"Logowanienieudane:}";
-                                    response.getOutputStream().print(json);
-                                })
-                        // Możesz dodac inne opcje, jak strona logowania, obsługa bledow itp.
-                )
-                .logout(logout -> logout
-                                .logoutUrl("/api/auth/logout")
-
-                        // Możesz dodac inne opcje, jak czyszczenie ciasteczek, przekierowanie po wylogowaniu itp.
-                )
+                .logout(logout -> logout.logoutUrl("/api/auth/logout"))
                 .authenticationManager(authenticationManager)
                 .build();
     }
@@ -82,6 +56,7 @@ public class WebSecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Adres Twojego frontu
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
