@@ -33,18 +33,5 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @GetMapping("/api/auth/validate")
-    public ResponseEntity<?> validateToken(HttpServletRequest request) {
-        String token = tokenProvider.resolveToken(request);
-        if (token != null && tokenProvider.validateToken(token)) {
-            Authentication auth = tokenProvider.getAuthentication(token);
-            if (auth != null) {
-                // Możesz dostosować odpowiedź, np. zwracając dane użytkownika
-                return ResponseEntity.ok("Token is valid");
-            }
-        }
-        return ResponseEntity.status(401).body("Invalid token");
-
-    }
 
 }

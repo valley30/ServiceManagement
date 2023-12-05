@@ -39,34 +39,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    // Metoda do ekstrakcji tokenu z żądania
-    public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
 
-    // Metoda do weryfikacji tokenu
-    public boolean validateToken(String token) {
-        try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            throw new RuntimeException("Expired or invalid JWT token");
-        }
-    }
 
-    // Metoda do uzyskania informacji o uwierzytelnieniu na podstawie tokenu
-    public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-
-        User principal = new User(claims.getSubject(), "", Collections.singletonList(new SimpleGrantedAuthority(claims.get("auth").toString())));
-
-        return new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
-    }
 }

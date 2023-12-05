@@ -35,24 +35,18 @@ public class LoginController {
     }
 
     @PostMapping("/api/auth/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
-
             String jwt = tokenProvider.generateToken(authentication);
-
-            // Ustawienie HttpOnly cookie
-            Cookie jwtCookie = new Cookie("jwtToken", jwt);
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setPath("/");
-            response.addCookie(jwtCookie);
-            return ResponseEntity.ok("User authenticated successfully");
+            return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
         } catch (AuthenticationException e) {
             return ResponseEntity.badRequest().body("Authentication failed");
         }
     }
+
     @GetMapping("/api/auth/logout")
     public ResponseEntity<?> logoutUser(HttpServletResponse response) {
         Cookie jwtCookie = new Cookie("jwtToken", null);
