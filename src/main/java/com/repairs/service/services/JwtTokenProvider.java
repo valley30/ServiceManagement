@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,15 @@ public class JwtTokenProvider {
     // Metoda do generowania tokenu JWT
     public String generateToken(Authentication authentication) {
         Claims claims = Jwts.claims().setSubject(authentication.getName());
-        claims.put("auth", Collections.singletonList(new SimpleGrantedAuthority(authentication.getAuthorities().iterator().next().getAuthority())));
+
+        // Pobranie roli użytkownika
+        String role = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("User"); // Domyślnie ustaw rolę na "User", jeśli nie znaleziono innej
+
+        claims.put("role", role); // Dodanie roli do claimów
+        claims.put("username", authentication.getName()); //
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -38,6 +47,7 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+
 
 
 
