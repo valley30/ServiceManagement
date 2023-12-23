@@ -5,13 +5,11 @@ import com.repairs.service.services.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/devices")
+
 public class DeviceController {
 
     @Autowired
@@ -23,6 +21,10 @@ public class DeviceController {
         Device newDevice = deviceService.addDevice(device);
         return ResponseEntity.ok(newDevice);
     }
-
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        deviceService.deleteDevice(id);
+        return ResponseEntity.ok().build();
+    }
     // Dodaj inne endpointy, jeśli potrzebne
 }

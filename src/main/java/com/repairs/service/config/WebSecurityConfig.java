@@ -32,10 +32,9 @@ public class WebSecurityConfig {
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/admin/**").hasAuthority("Admin")
-                        .requestMatchers("/api/user/**").hasAuthority("User")
+                        .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        // Dodaj regułę dla endpointu dodawania urządzeń
-                        .requestMatchers("/api/devices/add").hasAuthority("Admin")
+                        .requestMatchers("/api/devices/**") .permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -55,7 +54,7 @@ public class WebSecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000*")); // Adres Twojego frontu
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Adres Twojego frontu
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

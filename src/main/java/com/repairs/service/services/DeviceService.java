@@ -14,6 +14,9 @@ public class DeviceService {
     public Device addDevice(Device device) {
         return deviceRepository.save(device);
     }
+    public void deleteDevice(Long id) {
+        deviceRepository.deleteById(id);
+    }
 
     // Tutaj można dodać więcej metod, np. do wyszukiwania, aktualizacji, usuwania urządzeń
 }
