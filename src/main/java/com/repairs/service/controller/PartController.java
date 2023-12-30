@@ -2,6 +2,7 @@ package com.repairs.service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.repairs.service.Entity.Part;
 import com.repairs.service.services.PartService;
@@ -32,13 +33,13 @@ public class PartController {
         return ResponseEntity.ok(part);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/modify/{id}")
     public ResponseEntity<Part> updatePart(@PathVariable Long id, @RequestBody Part partDetails) {
         Part updatedPart = partService.updatePart(id, partDetails);
         return ResponseEntity.ok(updatedPart);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deletePart(@PathVariable Long id) {
         partService.deletePart(id);
         return ResponseEntity.ok("Part deleted successfully");

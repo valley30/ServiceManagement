@@ -7,10 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/devices")
 
 public class DeviceController {
+
 
     @Autowired
     private DeviceService deviceService;
@@ -21,10 +24,22 @@ public class DeviceController {
         Device newDevice = deviceService.addDevice(device);
         return ResponseEntity.ok(newDevice);
     }
+
+    @GetMapping
+    public ResponseEntity<List<Device>> getAllDevices() {
+        List<Device> devices = deviceService.getAllDevices();
+        return ResponseEntity.ok(devices);
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteDevice(@PathVariable Long id) {
         deviceService.deleteDevice(id);
         return ResponseEntity.ok().build();
+    }
+    @PutMapping("/modify/{id}")
+    public ResponseEntity<Device> modifyDevice(@PathVariable Long id, @RequestBody Device deviceDetails) {
+        Device updatedDevice = deviceService.modifyDevice(id, deviceDetails);
+        return ResponseEntity.ok(updatedDevice);
     }
     // Dodaj inne endpointy, jeśli potrzebne
 }

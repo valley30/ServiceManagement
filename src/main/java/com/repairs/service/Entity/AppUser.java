@@ -1,5 +1,6 @@
 package com.repairs.service.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Set;
 
@@ -13,9 +14,13 @@ public class AppUser {
     private String password;
     private String email;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "RoleID")
     private Role role;
+
+    @Transient
+    private String roleName; // Dodane pole dla nazwy roli z frontendu
 
     public AppUser() {
     }
@@ -26,6 +31,8 @@ public class AppUser {
         this.email = email;
         this.role = role;
     }
+
+    // Gettery i settery dla istniejących pól
 
     public Long getUserID() {
         return userID;
@@ -65,5 +72,15 @@ public class AppUser {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    // Gettery i settery dla nowego pola roleName
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }
