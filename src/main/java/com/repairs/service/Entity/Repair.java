@@ -16,20 +16,20 @@ public class Repair {
     private String technicianDescription;
     private Double price;
 
-    @ManyToOne
-    @JoinColumn(name = "UserID")
-    private AppUser user;
+    @Column(name = "UserID")
+    private Long userId; // Zmieniono z AppUser na Long
 
-    @ManyToOne
-    @JoinColumn(name = "reportId")
-    private Report report;
+    @Column(name = "DeviceID")
+    private Long deviceId; // Zmieniono z Device na Long
 
-    @ManyToOne
-    @JoinColumn(name = "DeviceID")
-    private Device device;
+    @Column(name = "CustomerID")
+    private Long customerId; // Zmieniono z Customer na Long
 
-    public Repair() {
-    }
+    @Column(name = "ReportID")
+    private Long reportId; // Dodano kolumnę dla ID zgłoszenia
+
+    private String repairProtocolPath; // Ścieżka do protokołu naprawy
+
 
     public Long getRepairID() {
         return repairID;
@@ -87,27 +87,42 @@ public class Repair {
         this.price = price;
     }
 
-    public AppUser getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(AppUser user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public Report getReport() {
-        return report;
+    public Long getDeviceId() {
+        return deviceId;
     }
 
-    public void setReport(Report report) {
-        this.report = report;
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 
-    public Device getDevice() {
-        return device;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setDevice(Device device) {
-        this.device = device;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    public Long getReportId() {
+        return reportId;
+    }
+
+    public void setReportId(Long reportId) {
+        this.reportId = reportId;
+    }
+    public String getRepairProtocolPath() {
+        return repairProtocolPath;
+    }
+
+    public void setRepairProtocolPath(String repairProtocolPath) {
+        this.repairProtocolPath = repairProtocolPath;
     }
 }

@@ -9,18 +9,12 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
-    private String shippingTrackingNumber;
     private String clientDescription;
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "UserID")
-    private AppUser user;
 
-    @ManyToOne
-    @JoinColumn(name = "CustomerID")
-    private Customer customer;
-
+    private Long userId; // ID użytkownika
+    private Long customerId; // ID klienta
     public Report() {
     }
 
@@ -32,13 +26,8 @@ public class Report {
         this.reportId = reportId;
     }
 
-    public String getShippingTrackingNumber() {
-        return shippingTrackingNumber;
-    }
 
-    public void setShippingTrackingNumber(String shippingTrackingNumber) {
-        this.shippingTrackingNumber = shippingTrackingNumber;
-    }
+
 
     public String getClientDescription() {
         return clientDescription;
@@ -56,19 +45,18 @@ public class Report {
         this.status = status;
     }
 
-    public AppUser getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(AppUser user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

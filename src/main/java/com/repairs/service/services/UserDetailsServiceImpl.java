@@ -20,9 +20,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         AppUser appUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(appUser.getRole().getName());
+        // Utwórz CustomUserDetails z userID
+        CustomUserDetails customUserDetails = new CustomUserDetails(
+                appUser.getUsername(),
+                appUser.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority(appUser.getRole().getName())),
+                appUser.getUserID()
+        );
 
-        return new org.springframework.security.core.userdetails.User(appUser.getUsername(), appUser.getPassword(), Collections.singletonList(authority));
+        return customUserDetails;
     }
 }
 

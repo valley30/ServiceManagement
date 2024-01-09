@@ -1,13 +1,16 @@
 package com.repairs.service.services;
 
+import com.repairs.service.Entity.AppUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,18 +26,20 @@ public class JwtTokenProvider {
 
     @Value("${security.jwt.token.expire-length:3600000}")
     private long validityInMilliseconds = 3600000; // 1h
-
+    @Autowired
+    private UserDetailsService userDetailsService;
     // Metoda do generowania tokenu JWT
     public String generateToken(Authentication authentication) {
-        Claims claims = Jwts.claims().setSubject(authentication.getName());
 
-        // Pobranie roli użytkownika
-        String role = authentication.getAuthorities().stream()
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+        // Dodanie roli i userID do claimów
+        claims.put("role", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("User"); // Domyślnie ustaw rolę na "User", jeśli nie znaleziono innej
-
-        claims.put("role", role); // Dodanie roli do claimów
+                .orElse("User"));
+        claims.put("userID", userDetails.getUserID());
         claims.put("username", authentication.getName()); //
 
         Date now = new Date();
