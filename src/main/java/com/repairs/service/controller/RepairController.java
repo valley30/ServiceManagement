@@ -6,10 +6,15 @@ import com.repairs.service.repository.DeviceRepository;
 import com.repairs.service.repository.RepairRepository;
 import com.repairs.service.repository.UserRepository;
 import com.repairs.service.services.RepairService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 @RestController
@@ -48,21 +53,36 @@ public class RepairController {
     }
 
 
-
-
     // Pobierz szczegóły naprawy
     @GetMapping("/{id}")
     public ResponseEntity<Repair> getRepair(@PathVariable Long id) {
         return ResponseEntity.ok(repairService.getRepairById(id));
     }
 
-    @PostMapping("/generate-protocol/{id}")
-    public ResponseEntity<?> generateRepairProtocol(@PathVariable Long id) {
-        repairService.generateRepairProtocol(id);
-        return ResponseEntity.ok().build(); // Można zwrócić też informację o sukcesie
+    @GetMapping("/generate-protocol/{id}")
+    public void generateRepairProtocol(@PathVariable Long id, HttpServletResponse response) {
+        Repair repair = repairRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Repair not found"));
+
+        // Wygeneruj plik PDF i zapisz go bezpośrednio na dysku
+        String protocolPath = repairService.generatePdf(repair);
+
+        // Odpowiedź HTTP z nagłówkiem do pobierania pliku
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "attachment; filename=protocol_" + repair.getRepairID() + ".pdf");
+
+        try (InputStream inputStream = new FileInputStream(protocolPath);
+             OutputStream outputStream = response.getOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Obsłuż błąd, np. zwróć odpowiednią odpowiedź HTTP
+        }
     }
-
-
 
     // Usuń naprawę
     @DeleteMapping("/delete/{id}")
@@ -70,21 +90,17 @@ public class RepairController {
         repairService.deleteRepair(id);
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/{id}/add-parts")
     public ResponseEntity<?> addPartsToRepair(@PathVariable Long id, @RequestBody List<Long> partIDs) {
         repairService.addPartsToRepair(id, partIDs);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}/remove-part/{repairPartID}")
-    public ResponseEntity<?> removePartFromRepair(@PathVariable Long repairPartID) {
-        repairService.removePartFromRepair(repairPartID);
-        return ResponseEntity.ok().build();
-    }
 
     // Update the updateRepair method to accept a list of part IDs
     @PutMapping("/modify/{id}")
-    public ResponseEntity<Repair> updateRepair(@PathVariable Long id, @RequestBody Repair repair, @RequestBody List<Long> partIDs) {
-        return ResponseEntity.ok(repairService.updateRepair(id, repair, partIDs));
+    public ResponseEntity<Repair> updateRepair(@PathVariable Long id, @RequestBody Repair repairDetails) {
+        return ResponseEntity.ok(repairService.updateRepair(id, repairDetails));
     }
 }

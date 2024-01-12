@@ -41,6 +41,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/reports/**").permitAll()
                         .requestMatchers("/api/edit-repair/**").permitAll()
                         .requestMatchers("/api/edit-report/**").permitAll()
+                        .requestMatchers("/api/repair-parts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -1,12 +1,8 @@
 package com.repairs.service.services;
 
 
-import com.repairs.service.Entity.Part;
-import com.repairs.service.Entity.Repair;
-import com.repairs.service.Entity.RepairParts;
-import com.repairs.service.repository.PartRepository;
-import com.repairs.service.repository.RepairPartsRepository;
-import com.repairs.service.repository.RepairRepository;
+import com.repairs.service.Entity.*;
+import com.repairs.service.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +19,11 @@ public class RepairService {
     @Autowired
     private RepairPartsRepository repairPartsRepository;
 
+    @Autowired
+    private CustomerRepository customerRepository;
 
+    @Autowired
+    private AppUserRepository appUserRepository;
     @Autowired
     private RepairRepository repairRepository;
 
@@ -50,29 +50,21 @@ public class RepairService {
 
 
     @Transactional
-    public Repair updateRepair(Long id, Repair repairDetails, List<Long> partIDs) {
-        Repair repair = repairRepository.findById(id)
+    public Repair updateRepair(Long id, Repair repairDetails) {
+        Repair existingRepair = repairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Repair not found"));
 
         // Map updated details onto the existing repair object
-        repair.setStatus(repairDetails.getStatus());
-        repair.setStartDate(repairDetails.getStartDate());
-        repair.setEndDate(repairDetails.getEndDate());
-        repair.setCustomerDescription(repairDetails.getCustomerDescription());
-        repair.setTechnicianDescription(repairDetails.getTechnicianDescription());
-        repair.setPrice(repairDetails.getPrice());
-        // ... any other fields that need updating
+        existingRepair.setStatus(repairDetails.getStatus());
+        existingRepair.setStartDate(repairDetails.getStartDate());
+        existingRepair.setEndDate(repairDetails.getEndDate());
+        existingRepair.setCustomerDescription(repairDetails.getCustomerDescription());
+        existingRepair.setTechnicianDescription(repairDetails.getTechnicianDescription());
+        existingRepair.setPrice(repairDetails.getPrice());
+        // Map other fields as needed
+        // ...
 
-        // First, remove existing parts associated with the repair
-        List<RepairParts> existingParts = repairPartsRepository.findByRepair(repair);
-        for (RepairParts rp : existingParts) {
-            repairPartsRepository.delete(rp);
-        }
-
-        // Then, add new parts
-        addPartsToRepair(id, partIDs);
-
-        return repairRepository.save(repair);
+        return repairRepository.save(existingRepair);
     }
     public Repair getRepairById(Long id) {
         return repairRepository.findById(id).orElseThrow(() -> new RuntimeException("Repair not found"));
@@ -83,12 +75,7 @@ public class RepairService {
         return repairRepository.save(repair);
     }
 
-    public Repair updateRepair(Long id, Repair repairDetails) {
-        Repair repair = repairRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Repair not found"));
-        // Aktualizacja danych naprawy, w tym customerId i protokołu
-        return repairRepository.save(repair);
-    }
+
     public void generateRepairProtocol(Long repairId) {
         Repair repair = repairRepository.findById(repairId)
                 .orElseThrow(() -> new RuntimeException("Repair not found"));
@@ -101,21 +88,34 @@ public class RepairService {
         repairRepository.save(repair);
     }
 
-    private String generatePdf(Repair repair) {
+    public String generatePdf(Repair repair) {
         String dest = "D:\\protocols\\protocol_" + repair.getRepairID() + ".pdf"; // Ścieżka i nazwa pliku
 
         try {
+            String priceText;
+            if (repair.getPrice() == null || repair.getPrice() == 0) {
+                priceText = "Gwarancyjna naprawa";
+            } else {
+                priceText = "Kwota naprawy: " + repair.getPrice();
+            }
+            Customer customer = customerRepository.findById(repair.getCustomerId())
+                    .orElseThrow(() -> new RuntimeException("Customer not found"));
+            AppUser appUser = appUserRepository.findById(repair.getUserId())
+                    .orElseThrow(() -> new RuntimeException("AppUser not found"));
             PdfWriter writer = new PdfWriter(dest);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            document.add(new Paragraph("Protokół Naprawy"));
+            document.add(new Paragraph("Protokol Naprawy"));
             document.add(new Paragraph("ID Naprawy: " + repair.getRepairID()));
             // Dodaj inne informacje o naprawie
             document.add(new Paragraph("Opis Klienta: " + repair.getCustomerDescription()));
             document.add(new Paragraph("Opis Technika: " + repair.getTechnicianDescription()));
-            // Można dodać więcej szczegółów
 
+            document.add(new Paragraph("Imie i Nazwisko Klienta: " + customer.getFirstName() + " " + customer.getLastName()));
+
+            document.add(new Paragraph("Technik: " + appUser.getEmail()));
+            document.add(new Paragraph(priceText));
             document.close();
         } catch (Exception e) {
             e.printStackTrace();
