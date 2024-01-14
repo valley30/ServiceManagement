@@ -40,20 +40,20 @@ public class RepairController {
         repair.setUserId(repairRequest.getUserId());
         repair.setDeviceId(repairRequest.getDeviceId());
 
-        // Przypisanie pozostałych pól z repairRequest do nowego obiektu repair
+
         repair.setStatus(repairRequest.getStatus());
         repair.setStartDate(repairRequest.getStartDate());
         repair.setEndDate(repairRequest.getEndDate());
         repair.setCustomerDescription(repairRequest.getCustomerDescription());
         repair.setTechnicianDescription(repairRequest.getTechnicianDescription());
         repair.setPrice(repairRequest.getPrice());
-        // Dodaj inne pola, które mogą być potrzebne
+
 
         return ResponseEntity.ok(repairService.addRepair(repair));
     }
 
 
-    // Pobierz szczegóły naprawy
+
     @GetMapping("/{id}")
     public ResponseEntity<Repair> getRepair(@PathVariable Long id) {
         return ResponseEntity.ok(repairService.getRepairById(id));
@@ -80,11 +80,15 @@ public class RepairController {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Obsłuż błąd, np. zwróć odpowiednią odpowiedź HTTP
+
         }
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Repair>> getRepairsByUserId(@PathVariable Long userId) {
+        List<Repair> userRepairs = repairRepository.findByUserId(userId);
+        return ResponseEntity.ok(userRepairs);
+    }
 
-    // Usuń naprawę
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteRepair(@PathVariable Long id) {
         repairService.deleteRepair(id);
@@ -98,7 +102,7 @@ public class RepairController {
     }
 
 
-    // Update the updateRepair method to accept a list of part IDs
+
     @PutMapping("/modify/{id}")
     public ResponseEntity<Repair> updateRepair(@PathVariable Long id, @RequestBody Repair repairDetails) {
         return ResponseEntity.ok(repairService.updateRepair(id, repairDetails));

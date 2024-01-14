@@ -1,6 +1,7 @@
 package com.repairs.service.services;
 
 
+import com.itextpdf.layout.property.TextAlignment;
 import com.repairs.service.Entity.*;
 import com.repairs.service.repository.*;
 import jakarta.transaction.Transactional;
@@ -102,20 +103,38 @@ public class RepairService {
                     .orElseThrow(() -> new RuntimeException("Customer not found"));
             AppUser appUser = appUserRepository.findById(repair.getUserId())
                     .orElseThrow(() -> new RuntimeException("AppUser not found"));
+
             PdfWriter writer = new PdfWriter(dest);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            document.add(new Paragraph("Protokol Naprawy"));
-            document.add(new Paragraph("ID Naprawy: " + repair.getRepairID()));
-            // Dodaj inne informacje o naprawie
-            document.add(new Paragraph("Opis Klienta: " + repair.getCustomerDescription()));
-            document.add(new Paragraph("Opis Technika: " + repair.getTechnicianDescription()));
+            // Ustawienie tytułu na środku
+            Paragraph titleParagraph = new Paragraph("Protokol Naprawy")
+                    .setTextAlignment(TextAlignment.CENTER)
+                    .setFontSize(20); // Ustawienie rozmiaru czcionki
+            document.add(titleParagraph);
+            // Dodanie miejsca na podpis klienta
+            document.add(new Paragraph("PODPIS KLIENTA\n\n\n\n................")
+                    .setFixedPosition(350, 50, 200) // x, y, szerokość obszaru
+                    .setTextAlignment(TextAlignment.RIGHT));
+            // Dodanie reszty informacji z lewej strony
+            document.add(new Paragraph("ID Naprawy: " + repair.getRepairID()).setMarginLeft(15));
+            document.add(new Paragraph("Opis Klienta: " + repair.getCustomerDescription()).setMarginLeft(15));
+            document.add(new Paragraph("Opis Technika: " + repair.getTechnicianDescription()).setMarginLeft(15));
+            document.add(new Paragraph("Imie i Nazwisko Klienta: " + customer.getFirstName() + " " + customer.getLastName()).setMarginLeft(15));
 
-            document.add(new Paragraph("Imie i Nazwisko Klienta: " + customer.getFirstName() + " " + customer.getLastName()));
+            // Dodanie informacji o techniku i cenie po prawej na dole
+            Paragraph technicianParagraph = new Paragraph("Naprawe wykonal:\nTechnik: " + appUser.getEmail() + "\n" + priceText)
+                    .setFixedPosition(350, 100, 200) // x, y, szerokość obszaru
+                    .setTextAlignment(TextAlignment.RIGHT);
 
-            document.add(new Paragraph("Technik: " + appUser.getEmail()));
-            document.add(new Paragraph(priceText));
+            document.add(technicianParagraph);
+
+            // Dodanie miejsca na podpis klienta
+            document.add(new Paragraph("PODPIS KLIENTA\n\n\n\n................")
+                    .setFixedPosition(350, 50, 200) // x, y, szerokość obszaru
+                    .setTextAlignment(TextAlignment.RIGHT));
+
             document.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,6 +143,7 @@ public class RepairService {
 
         return dest; // Zwróć ścieżkę do wygenerowanego PDF
     }
+
 
     public void deleteRepair(Long id) {
         repairRepository.deleteById(id);

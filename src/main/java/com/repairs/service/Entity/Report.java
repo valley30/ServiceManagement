@@ -13,8 +13,8 @@ public class Report {
     private String status;
 
 
-    private Long userId; // ID użytkownika
-    private Long customerId; // ID klienta
+    private Long userId;
+    private Long customerId;
     public Report() {
     }
 

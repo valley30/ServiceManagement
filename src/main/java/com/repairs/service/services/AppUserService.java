@@ -1,6 +1,7 @@
 package com.repairs.service.services;
 
 import com.repairs.service.Entity.AppUser;
+import com.repairs.service.Entity.Customer;
 import com.repairs.service.Entity.Role;
 import com.repairs.service.repository.AppUserRepository;
 import com.repairs.service.repository.RoleRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppUserService {
@@ -32,6 +34,9 @@ public class AppUserService {
 
 
         return appUserRepository.save(user);
+    }
+    public Optional<AppUser> findAppUserById(Long id) {
+        return appUserRepository.findById(id);
     }
 
     public List<AppUser> getAllUsers() {

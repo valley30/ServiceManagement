@@ -1,7 +1,9 @@
 package com.repairs.service.controller;
 
 
+import com.repairs.service.Entity.Repair;
 import com.repairs.service.Entity.Report;
+import com.repairs.service.repository.ReportRepository;
 import com.repairs.service.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,13 +18,19 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ReportRepository reportRepository;
 
     @GetMapping
     public ResponseEntity<List<Report>> getAllReports() {
         List<Report> reports = reportService.getAllReports();
         return ResponseEntity.ok(reports);
     }
-
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Report>> getReportsByUserId(@PathVariable Long userId) {
+        List<Report> userReports = reportRepository.findByUserId(userId);
+        return ResponseEntity.ok(userReports);
+    }
     @PostMapping("/add")
     public ResponseEntity<Report> addReport(@RequestBody Report reportRequest) {
         Report report = new Report();
@@ -34,19 +42,19 @@ public class ReportController {
         return ResponseEntity.ok(reportService.addReport(report));
     }
 
-    // Pobierz szczegóły zgłoszenia
+
     @GetMapping("/{id}")
     public ResponseEntity<Report> getReport(@PathVariable Long id) {
         return ResponseEntity.ok(reportService.getReportById(id));
     }
 
-    // Aktualizuj zgłoszenie
+
     @PutMapping("/modify/{id}")
     public ResponseEntity<Report> updateReport(@PathVariable Long id, @RequestBody Report report) {
         return ResponseEntity.ok(reportService.updateReport(id, report));
     }
 
-    // Usuń zgłoszenie
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteReport(@PathVariable Long id) {
         reportService.deleteReport(id);

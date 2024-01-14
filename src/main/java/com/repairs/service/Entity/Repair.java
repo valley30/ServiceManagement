@@ -17,18 +17,17 @@ public class Repair {
     private Double price;
 
     @Column(name = "UserID")
-    private Long userId; // Zmieniono z AppUser na Long
+    private Long userId;
 
     @Column(name = "DeviceID")
-    private Long deviceId; // Zmieniono z Device na Long
-
+    private Long deviceId;
     @Column(name = "CustomerID")
-    private Long customerId; // Zmieniono z Customer na Long
+    private Long customerId;
 
     @Column(name = "ReportID")
-    private Long reportId; // Dodano kolumnę dla ID zgłoszenia
+    private Long reportId;
 
-    private String repairProtocolPath; // Ścieżka do protokołu naprawy
+    private String repairProtocolPath;
 
 
     public Long getRepairID() {

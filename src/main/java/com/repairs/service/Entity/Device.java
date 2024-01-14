@@ -15,7 +15,7 @@ public class Device {
     public Device() {
     }
 
-    // Getters and Setters
+
     public Long getDeviceID() {
         return deviceID;
     }
@@ -48,5 +48,5 @@ public class Device {
         this.model = model;
     }
 
-    // Dodatkowe metody, jeśli są potrzebne
+
 }

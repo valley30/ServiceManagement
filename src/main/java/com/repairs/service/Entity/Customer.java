@@ -16,7 +16,7 @@ public class Customer {
     public Customer() {
     }
 
-    // Getters and Setters
+
     public Long getCustomerID() {
         return customerID;
     }
@@ -57,5 +57,5 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
-    // Możesz dodać dodatkowe metody, jeśli są potrzebne
+
 }

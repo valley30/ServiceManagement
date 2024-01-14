@@ -31,7 +31,7 @@ public class RepairPartsController {
     @Autowired
     private PartRepository partRepository;
 
-    // Dodaj część do naprawy
+
     @PostMapping("/add")
     public ResponseEntity<?> addPartToRepair(@RequestBody RepairPartRequest request) {
         Repair repair = repairRepository.findById(request.getRepairId())
@@ -46,7 +46,7 @@ public class RepairPartsController {
         return ResponseEntity.ok().build();
     }
 
-    // Pobierz części dla naprawy
+
     @GetMapping("/{repairId}")
     public ResponseEntity<List<RepairParts>> getPartsForRepair(@PathVariable Long repairId) {
         Repair repair = repairRepository.findById(repairId)
@@ -55,11 +55,11 @@ public class RepairPartsController {
         return ResponseEntity.ok(parts);
     }
 
-    // Remove a part from a repair
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteRepairParts(@PathVariable Long id) {
         repairPartsService.deleteRepairPart(id);
         return ResponseEntity.ok("RepairParts has been deleted");
     }
-    // ...[inne metody]
+
 }

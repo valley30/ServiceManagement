@@ -45,5 +45,5 @@ public class PartController {
         return ResponseEntity.ok("Part deleted successfully");
     }
 }
-    // Dodatkowe metody kontrolera, np. aktualizacja, usuwanie, wyszukiwanie
+
 

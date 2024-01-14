@@ -19,7 +19,7 @@ public class ReportPhotos {
     public ReportPhotos() {
     }
 
-    // Getters and Setters
+
     public Long getPhotoId() {
         return photoId;
     }
@@ -52,5 +52,5 @@ public class ReportPhotos {
         this.report = report;
     }
 
-    // Dodatkowe metody, jeśli są potrzebne
+
 }

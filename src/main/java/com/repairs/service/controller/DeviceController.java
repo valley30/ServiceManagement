@@ -41,5 +41,5 @@ public class DeviceController {
         Device updatedDevice = deviceService.modifyDevice(id, deviceDetails);
         return ResponseEntity.ok(updatedDevice);
     }
-    // Dodaj inne endpointy, jeśli potrzebne
+
 }

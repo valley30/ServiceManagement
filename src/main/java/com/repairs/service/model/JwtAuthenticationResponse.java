@@ -8,7 +8,7 @@ public class JwtAuthenticationResponse {
         this.accessToken = accessToken;
     }
 
-    // Getter i setter dla accessToken
+
     public String getAccessToken() {
         return accessToken;
     }
@@ -17,7 +17,6 @@ public class JwtAuthenticationResponse {
         this.accessToken = accessToken;
     }
 
-    // Getter i setter dla tokenType
     public String getTokenType() {
         return tokenType;
     }

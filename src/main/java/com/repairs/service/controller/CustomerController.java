@@ -45,5 +45,5 @@ public class CustomerController {
         return ResponseEntity.ok("Customer deleted successfully");
     }
 }
-    // Dodatkowe metody kontrolera, np. aktualizacja, usuwanie, wyszukiwanie
+
 

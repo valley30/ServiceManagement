@@ -74,7 +74,7 @@ public class AppUser {
         this.role = role;
     }
 
-    // Gettery i settery dla nowego pola roleName
+
 
     public String getRoleName() {
         return roleName;

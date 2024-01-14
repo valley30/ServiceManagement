@@ -4,11 +4,11 @@ public class LoginRequest {
     private String username;
     private String password;
 
-    // Konstruktor bezargumentowy
+
     public LoginRequest() {
     }
 
-    // Gettery i settery
+
     public String getUsername() {
         return username;
     }

@@ -4,7 +4,7 @@ public class RepairPartRequest {
     private Long repairId;
     private Long partId;
 
-    // Konstruktor, Gettery i Settery
+
     public RepairPartRequest() {
     }
 

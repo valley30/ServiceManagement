@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/repairs/**").permitAll()
                         .requestMatchers("/api/customers/**").permitAll()
                         .requestMatchers("/api/reports/**").permitAll()
+                        .requestMatchers("/api/stats/**").permitAll()
                         .requestMatchers("/api/edit-repair/**").permitAll()
                         .requestMatchers("/api/edit-report/**").permitAll()
                         .requestMatchers("/api/repair-parts/**").permitAll()

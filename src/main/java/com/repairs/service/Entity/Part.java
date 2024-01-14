@@ -14,7 +14,7 @@ public class Part {
     public Part() {
     }
 
-    // Getters and Setters
+
     public Long getPartID() {
         return partID;
     }
@@ -39,5 +39,5 @@ public class Part {
         this.price = price;
     }
 
-    // Dodatkowe metody, jeśli są potrzebne
+
 }

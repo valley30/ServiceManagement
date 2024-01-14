@@ -21,7 +21,7 @@ public class RepairParts {
     public RepairParts() {
     }
 
-    // Getters and Setters
+
     public Long getRepairPartID() {
         return repairPartID;
     }
@@ -46,5 +46,5 @@ public class RepairParts {
         this.part = part;
     }
 
-    // Dodatkowe metody, jeśli są potrzebne
+
 }
