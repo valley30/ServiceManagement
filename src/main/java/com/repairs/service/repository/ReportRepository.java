@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    // Możesz dodać niestandardowe metody wyszukiwania, jeśli są potrzebne
+
     List<Report> findByUserId(Long userId);
 }

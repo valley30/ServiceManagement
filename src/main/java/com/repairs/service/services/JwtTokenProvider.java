@@ -28,13 +28,12 @@ public class JwtTokenProvider {
     private long validityInMilliseconds = 3600000; // 1h
     @Autowired
     private UserDetailsService userDetailsService;
-    // Metoda do generowania tokenu JWT
+
     public String generateToken(Authentication authentication) {
 
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
-        // Dodanie roli i userID do claimów
         claims.put("role", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()

@@ -20,7 +20,7 @@ public class AppUser {
     private Role role;
 
     @Transient
-    private String roleName; // Dodane pole dla nazwy roli z frontendu
+    private String roleName;
 
     public AppUser() {
     }
@@ -32,7 +32,7 @@ public class AppUser {
         this.role = role;
     }
 
-    // Gettery i settery dla istniejących pól
+
 
     public Long getUserID() {
         return userID;

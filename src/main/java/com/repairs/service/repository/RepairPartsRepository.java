@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface RepairPartsRepository extends JpaRepository<RepairParts, Long> {
-    // Find all parts for a given repair
+
     List<RepairParts> findByRepair(Repair repair);
 
 

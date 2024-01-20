@@ -37,5 +37,5 @@ public class PartService {
         partRepository.deleteById(id);
     }
 }
-    // Dodatkowe metody serwisu, np. aktualizacja, usuwanie, wyszukiwanie
+
 

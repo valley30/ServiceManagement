@@ -20,14 +20,16 @@ public class ReportService {
         return reportRepository.findAll();
     }
     public Report addReport(Report report) {
-        return reportRepository.save(report);
+        Report savedReport = reportRepository.save(report);
+        return savedReport;
     }
+
 
     public Report getReportById(Long id) {
         return reportRepository.findById(id).orElseThrow(() -> new RuntimeException("Report not found"));
     }
 
-    // W ReportService
+
     public Report updateReport(Long id, Report reportDetails) {
         Report report = reportRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Report not found"));
@@ -36,7 +38,7 @@ public class ReportService {
         report.setStatus(reportDetails.getStatus());
         report.setCustomerId(reportDetails.getCustomerId());
         report.setUserId(reportDetails.getUserId());
-        // Ustawianie innych pól, jeśli jest taka potrzeba
+
 
         return reportRepository.save(report);
     }
@@ -45,5 +47,5 @@ public class ReportService {
         reportRepository.deleteById(id);
     }
 
-    // Inne metody, jeśli są potrzebne
+
 }

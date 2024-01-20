@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         AppUser appUser = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Utwórz CustomUserDetails z userID
+
         CustomUserDetails customUserDetails = new CustomUserDetails(
                 appUser.getUsername(),
                 appUser.getPassword(),

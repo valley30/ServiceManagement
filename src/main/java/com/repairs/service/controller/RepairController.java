@@ -64,10 +64,10 @@ public class RepairController {
         Repair repair = repairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Repair not found"));
 
-        // Wygeneruj plik PDF i zapisz go bezpośrednio na dysku
+
         String protocolPath = repairService.generatePdf(repair);
 
-        // Odpowiedź HTTP z nagłówkiem do pobierania pliku
+
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "attachment; filename=protocol_" + repair.getRepairID() + ".pdf");
 

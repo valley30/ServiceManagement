@@ -29,12 +29,12 @@ public class RepairService {
     private RepairRepository repairRepository;
 
     @Autowired
-    private PartRepository partRepository; // Inject the PartRepository
+    private PartRepository partRepository;
     public List<Repair> getAllRepairs() {
         return repairRepository.findAll();
     }
     public void addPartsToRepair(Long repairID, List<Long> partIDs) {
-        Repair repair = getRepairById(repairID); // Ensure the repair exists
+        Repair repair = getRepairById(repairID);
 
         for (Long partID : partIDs) {
             RepairParts repairPart = new RepairParts();
@@ -55,15 +55,17 @@ public class RepairService {
         Repair existingRepair = repairRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Repair not found"));
 
-        // Map updated details onto the existing repair object
+
         existingRepair.setStatus(repairDetails.getStatus());
         existingRepair.setStartDate(repairDetails.getStartDate());
-        existingRepair.setEndDate(repairDetails.getEndDate());
+        if (repairDetails.getEndDate() != null) {
+            existingRepair.setEndDate(repairDetails.getEndDate());
+        }
         existingRepair.setCustomerDescription(repairDetails.getCustomerDescription());
         existingRepair.setTechnicianDescription(repairDetails.getTechnicianDescription());
         existingRepair.setPrice(repairDetails.getPrice());
-        // Map other fields as needed
-        // ...
+        existingRepair.setDeviceId(repairDetails.getDeviceId());
+
 
         return repairRepository.save(existingRepair);
     }
@@ -72,7 +74,7 @@ public class RepairService {
     }
 
     public Repair addRepair(Repair repair) {
-        // Logika dodawania naprawy, w tym przypisanie customerId i inicjalizacja protokołu
+
         return repairRepository.save(repair);
     }
 
@@ -81,8 +83,7 @@ public class RepairService {
         Repair repair = repairRepository.findById(repairId)
                 .orElseThrow(() -> new RuntimeException("Repair not found"));
 
-        // Logika generowania protokołu naprawy (PDF)
-        // Możesz użyć biblioteki jak iText lub Apache PDFBox
+
         String protocolPath = generatePdf(repair);
 
         repair.setRepairProtocolPath(protocolPath);
@@ -108,31 +109,32 @@ public class RepairService {
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Ustawienie tytułu na środku
+
             Paragraph titleParagraph = new Paragraph("Protokol Naprawy")
                     .setTextAlignment(TextAlignment.CENTER)
-                    .setFontSize(20); // Ustawienie rozmiaru czcionki
+                    .setFontSize(20);
             document.add(titleParagraph);
-            // Dodanie miejsca na podpis klienta
+
             document.add(new Paragraph("PODPIS KLIENTA\n\n\n\n................")
-                    .setFixedPosition(350, 50, 200) // x, y, szerokość obszaru
+                    .setFixedPosition(350, 50, 200)
                     .setTextAlignment(TextAlignment.RIGHT));
-            // Dodanie reszty informacji z lewej strony
+
             document.add(new Paragraph("ID Naprawy: " + repair.getRepairID()).setMarginLeft(15));
             document.add(new Paragraph("Opis Klienta: " + repair.getCustomerDescription()).setMarginLeft(15));
             document.add(new Paragraph("Opis Technika: " + repair.getTechnicianDescription()).setMarginLeft(15));
             document.add(new Paragraph("Imie i Nazwisko Klienta: " + customer.getFirstName() + " " + customer.getLastName()).setMarginLeft(15));
 
-            // Dodanie informacji o techniku i cenie po prawej na dole
+
             Paragraph technicianParagraph = new Paragraph("Naprawe wykonal:\nTechnik: " + appUser.getEmail() + "\n" + priceText)
-                    .setFixedPosition(350, 100, 200) // x, y, szerokość obszaru
+                    .setFixedPosition(350, 400
+                            , 200)
                     .setTextAlignment(TextAlignment.RIGHT);
 
             document.add(technicianParagraph);
 
-            // Dodanie miejsca na podpis klienta
+
             document.add(new Paragraph("PODPIS KLIENTA\n\n\n\n................")
-                    .setFixedPosition(350, 50, 200) // x, y, szerokość obszaru
+                    .setFixedPosition(350, 50, 200)
                     .setTextAlignment(TextAlignment.RIGHT));
 
             document.close();
@@ -141,7 +143,7 @@ public class RepairService {
             return null;
         }
 
-        return dest; // Zwróć ścieżkę do wygenerowanego PDF
+        return dest;
     }
 
 
@@ -149,5 +151,5 @@ public class RepairService {
         repairRepository.deleteById(id);
     }
 
-    // Inne metody, jeśli są potrzebne
+
 }

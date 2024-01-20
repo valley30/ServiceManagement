@@ -38,7 +38,7 @@ public class ReportController {
         report.setUserId(reportRequest.getUserId());
         report.setClientDescription(reportRequest.getClientDescription());
         report.setStatus(reportRequest.getStatus());
-        // inne ustawienia
+
         return ResponseEntity.ok(reportService.addReport(report));
     }
 

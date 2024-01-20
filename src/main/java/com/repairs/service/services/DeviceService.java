@@ -28,7 +28,7 @@ public class DeviceService {
         Device device = deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Device not found with id : " + id));
 
-        // Aktualizacja danych urządzenia
+
         device.setType(deviceDetails.getType());
         device.setManufacturer(deviceDetails.getManufacturer());
         device.setModel(deviceDetails.getModel());
@@ -36,5 +36,5 @@ public class DeviceService {
         return deviceRepository.save(device);
     }
 
-    // Tutaj można dodać więcej metod, np. do wyszukiwania, aktualizacji, usuwania urządzeń
+
 }

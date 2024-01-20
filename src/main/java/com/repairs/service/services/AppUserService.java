@@ -49,23 +49,22 @@ public class AppUserService {
         AppUser user = appUserRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id : " + id));
 
-        // Aktualizacja danych użytkownika tylko jeśli zostały dostarczone
+
         if (userDetails.getUsername() != null && !userDetails.getUsername().isEmpty()) {
             user.setUsername(userDetails.getUsername());
         }
 
-        // Aktualizacja hasła tylko jeśli zostało dostarczone
+
         if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
             String encodedPassword = passwordEncoder.encode(userDetails.getPassword());
             user.setPassword(encodedPassword);
         }
 
-        // Aktualizacja emaila tylko jeśli został dostarczony
         if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
             user.setEmail(userDetails.getEmail());
         }
 
-        // Aktualizacja roli tylko jeśli została dostarczona
+
         if (userDetails.getRole() != null) {
             user.setRole(userDetails.getRole());
         }
@@ -73,5 +72,5 @@ public class AppUserService {
         return appUserRepository.save(user);
     }
 
-    // Inne metody...
+
 }

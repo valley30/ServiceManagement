@@ -13,5 +13,5 @@ public class RepairPartsService {
     public void  deleteRepairPart(Long id) {
         repairPartsRepository.deleteById(id);
     }
-    // Dodatkowe metody serwisu, np. aktualizacja, usuwanie, wyszukiwanie
+
 }

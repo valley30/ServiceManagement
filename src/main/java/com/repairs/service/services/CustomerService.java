@@ -38,5 +38,5 @@ public class CustomerService {
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
     }
-    // Dodatkowe metody serwisu, np. aktualizacja, usuwanie, wyszukiwanie
+
 }
