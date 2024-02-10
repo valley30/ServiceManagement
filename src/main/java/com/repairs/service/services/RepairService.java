@@ -78,7 +78,10 @@ public class RepairService {
         return repairRepository.save(repair);
     }
 
+    public Optional<Repair> findByReportId(Long reportId) {
 
+        return repairRepository.findByReportId(reportId);
+    }
     public void generateRepairProtocol(Long repairId) {
         Repair repair = repairRepository.findById(repairId)
                 .orElseThrow(() -> new RuntimeException("Repair not found"));

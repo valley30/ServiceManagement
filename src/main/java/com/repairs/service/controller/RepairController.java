@@ -1,10 +1,8 @@
 package com.repairs.service.controller;
 
 import com.repairs.service.Entity.Repair;
-import com.repairs.service.repository.CustomerRepository;
-import com.repairs.service.repository.DeviceRepository;
-import com.repairs.service.repository.RepairRepository;
-import com.repairs.service.repository.UserRepository;
+import com.repairs.service.Entity.Report;
+import com.repairs.service.repository.*;
 import com.repairs.service.services.RepairService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,8 @@ public class RepairController {
     private RepairRepository repairRepository;
     @Autowired
     private RepairService repairService;
-
+    @Autowired
+    private ReportRepository reportRepository;
     @GetMapping
     public ResponseEntity<List<Repair>> getAllRepairs() {
         List<Repair> repairs = repairService.getAllRepairs();
@@ -36,11 +35,11 @@ public class RepairController {
     @PostMapping("/add")
     public ResponseEntity<Repair> addRepair(@RequestBody Repair repairRequest) {
         Repair repair = new Repair();
+        // Ustawienie pól na podstawie danych z żądania
         repair.setCustomerId(repairRequest.getCustomerId());
         repair.setUserId(repairRequest.getUserId());
         repair.setDeviceId(repairRequest.getDeviceId());
-
-
+        repair.setReportId(repairRequest.getReportId()); // Ustawienie reportId
         repair.setStatus(repairRequest.getStatus());
         repair.setStartDate(repairRequest.getStartDate());
         repair.setEndDate(repairRequest.getEndDate());
@@ -48,12 +47,19 @@ public class RepairController {
         repair.setTechnicianDescription(repairRequest.getTechnicianDescription());
         repair.setPrice(repairRequest.getPrice());
 
+        // Zapisanie naprawy do bazy danych
+        Repair savedRepair = repairService.addRepair(repair);
 
-        return ResponseEntity.ok(repairService.addRepair(repair));
+        // Zwrócenie utworzonego obiektu w odpowiedzi
+        return ResponseEntity.ok(savedRepair);
     }
 
-
-
+    @GetMapping("/by-report/{reportId}")
+    public ResponseEntity<Repair> getRepairByReportId(@PathVariable Long reportId) {
+        Repair repair = repairService.findByReportId(reportId)
+                .orElseThrow(() -> new RuntimeException("No repair found for report id: " + reportId));
+        return ResponseEntity.ok(repair);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Repair> getRepair(@PathVariable Long id) {
         return ResponseEntity.ok(repairService.getRepairById(id));

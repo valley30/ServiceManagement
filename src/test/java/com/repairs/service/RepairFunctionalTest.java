@@ -35,5 +35,5 @@ public class RepairFunctionalTest {
 
     }
 
-    // Inne testy funkcjonalne...
+
 }

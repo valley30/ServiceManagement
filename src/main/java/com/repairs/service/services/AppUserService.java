@@ -2,6 +2,7 @@ package com.repairs.service.services;
 
 import com.repairs.service.Entity.AppUser;
 import com.repairs.service.Entity.Customer;
+import com.repairs.service.Entity.Repair;
 import com.repairs.service.Entity.Role;
 import com.repairs.service.repository.AppUserRepository;
 import com.repairs.service.repository.RoleRepository;
@@ -9,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import com.repairs.service.repository.RepairRepository;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AppUserService {
+    @Autowired
+    private RepairRepository repairRepository;
     @Autowired
     private AppUserRepository appUserRepository;
     @Autowired
@@ -42,7 +46,15 @@ public class AppUserService {
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll();
     }
+    @Transactional
     public void deleteUser(Long id) {
+        // Przypisanie napraw do innego użytkownika lub ustawienie userId jako null
+        List<Repair> userRepairs = repairRepository.findByUserId(id);
+        for (Repair repair : userRepairs) {
+            repair.setUserId(null); // lub przypisz do innego użytkownika
+            repairRepository.save(repair);
+        }
+
         appUserRepository.deleteById(id);
     }
     public AppUser modifyUser(Long id, AppUser userDetails) {
